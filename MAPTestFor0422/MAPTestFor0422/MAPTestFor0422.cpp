@@ -9,7 +9,6 @@
 #include <fstream>
 using namespace std;
 
-/*2020302131268 关子安 数据结构与算法实习*/
 /*
 * 已选：
 1）CSV格式数据文件的读写
