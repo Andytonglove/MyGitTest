@@ -158,10 +158,39 @@ public class OutputOrderNum {
         
         String []FiletextPath={"\\text.txt"};   //作为文件读取使用的路径
         
+        //创建一个进度条并设置参数
+        final JProgressBar progressBar = new JProgressBar();
+        p.add(progressBar);
+        progressBar.setBounds(330, 500, 180, 15);
+        progressBar.setIndeterminate(true);   //模糊模式
+        progressBar.setVisible(false);   //利用转换是否可见来显示，效果一般，会卡             		
+
+        /*
+        //重新生成数据或者排序写入文件运行时间较长，本考虑加上一个JProgressBar进度条利用多线程来显示
+        progressBar.setMinimum(0);
+        progressBar.setMaximum(100);
+        int[] currentProgress = {0};
+		progressBar.setValue(currentProgress[0]);   //设置当前进度值
+        progressBar.setStringPainted(true);   //绘制百分比文本（进度条中间显示的百分数）
+        new Timer(500, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                currentProgress[0]++;
+                if (currentProgress[0] > 100) {
+                    currentProgress[0] = 0;
+                }
+                progressBar.setValue(currentProgress[0]);
+            }
+        }).start();
+        */
+        
+/////////////////////我是一条分割线，下方是部分监听/////////////////////////////////
+        
         //方法一生成数据，分隔符为空格->数据生成和选择
         item1.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-                Object[] options ={ "就使用提供的已有数据文件~", "还是重新生成随机数据文件吧~" };  
+                Object[] options ={ "就使用提供的已有数据文件~", "还是重新生成随机数据文件吧~" };
+                progressBar.setVisible(true);   //开始显示进度条
                 int m = JOptionPane.showOptionDialog(null, "是否选择已有数据文件作为处理对象？\n"
                 		+ "如果您不做任何操作就关闭窗口，\n则视为您希望使用已经预先重新生成过的随机数据文件^^\n"
                 		+ "这样能够节约一些重新生成文件的等待时间（大约7秒）！", "选择使用数据",
@@ -193,14 +222,13 @@ public class OutputOrderNum {
             		
             		JOptionPane.showMessageDialog(null,"数据已经生成！\n"
             				+ "10万条数值数据已经保存在“text.txt”文件中\n"
-            				+ "用时"+usedTime+"秒\n"
+            				+ "生成数据并保存到文件用时"+usedTime+"秒\n"
             				+ "数据较多，等待时间可能较长，见谅！"
             				,"保存成功",JOptionPane.PLAIN_MESSAGE,imageIcon_menu);
                 }else {
                 	FiletextPath[0]="\\text.txt";
                 }
-        		
-        		//重新生成数据运行时间较长，可以考虑加上一个JProgressBar显示线程来显示
+                progressBar.setVisible(false);   //结束显示进度条
         	}
         });
         
@@ -511,6 +539,49 @@ public class OutputOrderNum {
         	}
         });
         
+        //重新生成数据
+        item10.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+                Object[] options ={ "确定", "取消" };
+                progressBar.setVisible(true);   //开始显示进度条
+                int m = JOptionPane.showOptionDialog(null, "您确定要重新生成数据文件吗？\n"
+                		, "确认",JOptionPane.YES_NO_OPTION, 
+                		JOptionPane.QUESTION_MESSAGE,imageIcon_menu, options, options[0]);
+                
+                if(m==0) {
+                    long startTime =  System.currentTimeMillis();
+                    for(int i=0;i<100000;i++) {
+                    	int a=new Random().nextInt(100000-0)+0;
+                    	try {
+                    		File f=new File("text.txt");
+                    		if(f.exists()) {
+                    			//System.out.println("文件存在");
+                    		}else {
+                    			//System.out.println("文件不存在");
+                    			f.createNewFile();
+                    		}
+                    		BufferedWriter output = new BufferedWriter(new FileWriter(f,true));
+                    		output.write(a+" ");
+                    		output.close();
+                    	} catch (IOException e1) {
+                    		e1.printStackTrace();
+                    	}
+                    }
+                    long endTime =  System.currentTimeMillis();
+                    long usedTime = (endTime-startTime)/1000;
+
+                    JOptionPane.showMessageDialog(null,"数据已经生成！\n"
+                    		+ "10万条数值数据已经保存在“text.txt”文件中\n"
+                    		+ "生成数据并保存到文件用时"+usedTime+"秒\n"
+                    		+ "数据较多，等待时间可能较长，见谅！"
+                    		,"保存成功",JOptionPane.PLAIN_MESSAGE,imageIcon_menu);
+                }else {
+                    progressBar.setVisible(false);
+                }
+                progressBar.setVisible(false);   //结束显示进度条
+        	}
+        });
+        
         //886!
         item11.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
@@ -557,14 +628,14 @@ public class OutputOrderNum {
                 p6.add("Center",textArea6);
                 textArea6.setOpaque(false);
                 textArea6.setForeground(Color.RED);
-                textArea6.setFont(new Font("楷体",Font.BOLD,18));    
+                textArea6.setFont(new Font("仿宋",Font.BOLD,18));    
 
                 textArea6.setEditable(false);
                 textArea6.append("本Java程序开发信息：\n\n"
                 		+ "本程序主要实现对10万数据量数据的随机生成、"
                 		+ "文件读写以及排序查找，并比较了算法的时间复杂度。\n"
                 		+ "软件版本：Version 1.0\n"
-                		+ "开发人员：关子安\n"
+                		+ "开发设计：关子安\n"
                 		+ "开发工具：Java GUI");
                 textArea6.setEditable(false);
                 
@@ -586,7 +657,7 @@ public class OutputOrderNum {
         		if(e.getSource()==item9)  textArea.setText("您选择在输入数据进行折半查找……\n");
         		if(e.getSource()==item10)  textArea.setText("正在进行重新生成数据文档……\n");
         		if(e.getSource()==item11)  textArea.setText("886！\n");
-        		if(e.getSource()==item12)  textArea.setText("即将访问本项目github项目主页……\n");
+        		if(e.getSource()==item12)  textArea.setText("即将访问本项目GitHub项目主页……\n");
         		if(e.getSource()==item13)  textArea.setText("即将访问本项目相关信息！\n");
 
         	}
