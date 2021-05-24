@@ -4,8 +4,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
-import java.util.Random;
-import java.util.Scanner;
+import java.util.*;
 import javax.swing.*;
 
 public class OutputOrderNum {
@@ -66,10 +65,11 @@ public class OutputOrderNum {
 		JMenuItem item7=new JMenuItem("查看排序文件与结论",imageIcon_menu);   //menu2
      	JMenuItem item8=new JMenuItem("顺序查找数据",imageIcon_menu);
      	JMenuItem item9=new JMenuItem("折半查找数据",imageIcon_menu);
-     	JMenuItem item10=new JMenuItem("重新生成数据",imageIcon_menu);   //menu3
-     	JMenuItem item11=new JMenuItem("残忍再见",imageIcon_menu);
-     	JMenuItem item12=new JMenuItem("项目主页",imageIcon_menu);
-     	JMenuItem item13=new JMenuItem("关于项目",imageIcon_menu);   //menu4
+     	JMenuItem item10=new JMenuItem("哈希索引查找数据",imageIcon_menu);
+     	JMenuItem item11=new JMenuItem("重新生成数据",imageIcon_menu);   //menu3
+     	JMenuItem item12=new JMenuItem("残忍再见",imageIcon_menu);
+     	JMenuItem item13=new JMenuItem("项目主页",imageIcon_menu);
+     	JMenuItem item14=new JMenuItem("关于项目",imageIcon_menu);   //menu4
      	menu1.add(item1);
      	menu1.addSeparator();
      	menu1.add(item2);
@@ -87,11 +87,13 @@ public class OutputOrderNum {
  		menu3.add(item9);
      	menu3.addSeparator();
  		menu3.add(item10);
- 		menu4.add(item11);
-     	menu4.addSeparator();
+     	menu3.addSeparator();
+ 		menu3.add(item11);
  		menu4.add(item12);
      	menu4.addSeparator();
  		menu4.add(item13);
+     	menu4.addSeparator();
+ 		menu4.add(item14);
  		
  		//一个行动提示文本框
      	JTextArea textArea=new JTextArea();
@@ -163,8 +165,7 @@ public class OutputOrderNum {
         p.add(progressBar);
         progressBar.setBounds(330, 500, 180, 15);
         progressBar.setIndeterminate(true);   //模糊模式
-        progressBar.setVisible(false);   //利用转换是否可见来显示，效果一般，会卡             		
-
+        progressBar.setVisible(false);   //利用转换是否可见来显示，效果一般，依然会卡             		
         /*
         //重新生成数据或者排序写入文件运行时间较长，本考虑加上一个JProgressBar进度条利用多线程来显示
         progressBar.setMinimum(0);
@@ -539,8 +540,17 @@ public class OutputOrderNum {
         	}
         });
         
-        //重新生成数据
+        //索引查找！！！->哈希查找
         item10.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		JOptionPane.showMessageDialog(null,"哈希索引查找目前还在完善中233\n先试试别的查找方法吧！"
+        				,"哈希索引查找",JOptionPane.PLAIN_MESSAGE,imageIcon_menu);  		
+
+        	}
+        });
+        
+        //重新生成数据
+        item11.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
                 Object[] options ={ "确定", "取消" };
                 progressBar.setVisible(true);   //开始显示进度条
@@ -583,14 +593,14 @@ public class OutputOrderNum {
         });
         
         //886!
-        item11.addActionListener(new ActionListener() {
+        item12.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
 				System.exit(0);
         	}
         });
         
         //项目主页
-        item12.addActionListener(new ActionListener() {
+        item13.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
         		try {
         			//我的github项目首页
@@ -602,7 +612,7 @@ public class OutputOrderNum {
         });
         
         //关于项目
-        item13.addActionListener(new ActionListener() {
+        item14.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
         		JFrame fr6=new JFrame();
         		fr6.setTitle("关于项目");
@@ -655,10 +665,11 @@ public class OutputOrderNum {
         		if(e.getSource()==item7)  textArea.setText("即将打开排序生成的的数据文件……\n");
         		if(e.getSource()==item8)  textArea.setText("您选择在输入数据进行顺序查找……");
         		if(e.getSource()==item9)  textArea.setText("您选择在输入数据进行折半查找……\n");
-        		if(e.getSource()==item10)  textArea.setText("正在进行重新生成数据文档……\n");
-        		if(e.getSource()==item11)  textArea.setText("886！\n");
-        		if(e.getSource()==item12)  textArea.setText("即将访问本项目GitHub项目主页……\n");
-        		if(e.getSource()==item13)  textArea.setText("即将访问本项目相关信息！\n");
+        		if(e.getSource()==item10)  textArea.setText("您选择进行哈希索引查找数据！！！\n");
+        		if(e.getSource()==item11)  textArea.setText("正在进行重新生成数据文档……\n");
+        		if(e.getSource()==item12)  textArea.setText("886！\n");
+        		if(e.getSource()==item13)  textArea.setText("即将访问本项目GitHub项目主页……\n");
+        		if(e.getSource()==item14)  textArea.setText("即将访问本项目相关信息！\n");
 
         	}
         };
@@ -675,6 +686,7 @@ public class OutputOrderNum {
         item11.addActionListener(listen);
         item12.addActionListener(listen);
         item13.addActionListener(listen);
+        item14.addActionListener(listen);
 	}
 	
 /////////////////////我是一条分割线，下方是部分函数/////////////////////////////////
@@ -848,14 +860,14 @@ public class OutputOrderNum {
                 return (mid + 1);
             } else if (arr[mid] > key) {
                 high = mid - 1;
-                if(arr[mid]-key<minDifference) {
-                	minDifference=arr[mid]-key;
+                if(Math.abs(arr[mid]-key)<minDifference) {
+                	minDifference=Math.abs(arr[mid]-key);
                 	minindex=mid;
                 }
             } else if (arr[mid] < key) {
                 low = mid + 1;
-                if(key-arr[mid]<minDifference) {
-                	minDifference=arr[mid]-key;
+                if(Math.abs(key-arr[mid])<minDifference) {
+                	minDifference=Math.abs(arr[mid]-key);
                 	minindex=mid;
                 }
             }
