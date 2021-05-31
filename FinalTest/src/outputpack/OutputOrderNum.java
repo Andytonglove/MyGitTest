@@ -645,7 +645,7 @@ public class OutputOrderNum {
                 		+ "本程序主要实现对10万数据量数据的随机生成、"
                 		+ "文件读写以及排序查找，并比较了算法的时间复杂度。\n"
                 		+ "软件版本：Version 1.0\n"
-                		+ "开发设计：关子安\n"
+                		+ "开发设计：关子安 黄一格 林雨淇\n"
                 		+ "开发工具：Java GUI");
                 textArea6.setEditable(false);
                 
