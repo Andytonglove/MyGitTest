@@ -702,7 +702,8 @@ public class OutputOrderNum {
 			s.close();
 		}catch(Exception ee) {
 			System.out.println("节点基本信息文件未找到");
-    		JOptionPane.showMessageDialog(null,"节点基本信息文件未找到");
+    		JOptionPane.showMessageDialog(null,"节点基本信息文件未找到\n"
+    				+ "程序将关闭，请您检查数据文件的完整性！");
 			System.exit(0);
 		}
     }
